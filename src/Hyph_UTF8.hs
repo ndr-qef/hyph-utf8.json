@@ -8,9 +8,11 @@ module Hyph_UTF8
 
 import Data.Aeson as A
 import Data.ByteString.Lazy (ByteString)
-import qualified Data.ByteString.Lazy as BStr
 import Data.Char (digitToInt, isDigit)
+import Data.List (nub)
 import Data.Text (Text)
+import Data.Text.ICU (NormalizationMode (..), normalize)
+import qualified Data.ByteString.Lazy as BStr
 import qualified Data.Text as T
 import qualified Data.Text.IO as T.IO
 
@@ -38,7 +40,7 @@ score klp cs
 type KLPair = (Text, [Int])
 
 pair :: KLPattern -> Text -> KLPair
-pair klp t = (nonScoring klp t, score klp t)
+pair klp t = (normalize NFC $ nonScoring klp t, score klp t)
   where nonScoring Pattern = T.filter (not . isDigit)
         nonScoring Exception = T.filter (/= '-')
 
@@ -46,7 +48,7 @@ parse :: KLPattern -> Text -> [KLPair]
 parse klp t = map (pair klp) (T.lines t)
 
 serialize :: KLPattern -> Text -> ByteString
-serialize klp = A.encode . (parse klp)
+serialize klp = A.encode . (nub . (parse klp))
 
 
 extension :: KLPattern -> String
