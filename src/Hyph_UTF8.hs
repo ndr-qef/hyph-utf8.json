@@ -9,7 +9,7 @@ module Hyph_UTF8
 import Data.Aeson as A
 import Data.ByteString.Lazy (ByteString)
 import Data.Char (digitToInt, isDigit)
-import Data.List (nub)
+import Data.List.Extra (nubOrd)
 import Data.Text (Text)
 import Data.Text.ICU (NormalizationMode (..), normalize)
 import qualified Data.ByteString.Lazy as BStr
@@ -48,7 +48,7 @@ parse :: KLPattern -> Text -> [KLPair]
 parse klp t = map (pair klp) (T.lines t)
 
 serialize :: KLPattern -> Text -> ByteString
-serialize klp = A.encode . (nub . (parse klp))
+serialize klp = A.encode . (nubOrd . (parse klp))
 
 
 extension :: KLPattern -> String
