@@ -40,9 +40,10 @@ score klp cs
 type KLPair = (Text, [Int])
 
 pair :: KLPattern -> Text -> KLPair
-pair klp t = (normalize NFC $ nonScoring klp t, score klp t)
+pair klp t = (nonScoring klp t', score klp t')
   where nonScoring Pattern = T.filter (not . isDigit)
         nonScoring Exception = T.filter (/= '-')
+        t' = normalize NFC t
 
 parse :: KLPattern -> Text -> [KLPair]
 parse klp t = map (pair klp) (T.lines t)
