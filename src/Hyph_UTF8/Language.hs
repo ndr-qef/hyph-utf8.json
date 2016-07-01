@@ -64,6 +64,7 @@ tags =
   , "sr-cyrl"
   , "sh-cyrl"
   , "sh-latn"
+  , "cu"
   , "sk"
   , "sl"
   , "es"
