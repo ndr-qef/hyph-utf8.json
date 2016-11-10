@@ -11,6 +11,7 @@ import Control.Monad.Reader
 import Control.Monad.Reader.Class
 import Data.ByteString.Lazy (ByteString)
 import Data.Char (digitToInt, isDigit, toLower)
+import Data.List (sort)
 import Data.List.Extra (nubOrd)
 import Data.Text (Text)
 import Data.Text.ICU (NormalizationMode (..), normalize)
@@ -86,8 +87,8 @@ parse klp t = mapM (pair klp) (T.lines t)
 serialize :: MonadReader ModeOpt m => KLPattern -> Text -> m ByteString
 serialize klp t = do
   patterns <- parse klp t
-  let uniques = nubOrd patterns
-  return (Aeson.encode uniques)
+  let sortedUniques = (sort . nubOrd) patterns
+  return (Aeson.encode sortedUniques)
 
 
 klpFileName :: KLPattern -> String -> FilePath
